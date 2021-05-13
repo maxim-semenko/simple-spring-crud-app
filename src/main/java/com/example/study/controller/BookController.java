@@ -42,7 +42,7 @@ public class BookController {
      * @param name   the name
      * @param pages  the pages
      * @param model  the model
-     * @return the string
+     * @return {@link String} page
      */
     @PostMapping("/bookList")
     public String addBook(@RequestParam String author,
@@ -58,7 +58,7 @@ public class BookController {
      * Delete book string.
      *
      * @param id the id
-     * @return the string
+     * @return {@link String} page
      */
     @GetMapping("book-delete/{id}")
     public String deleteBook(@PathVariable("id") Long id) {
@@ -71,7 +71,7 @@ public class BookController {
      *
      * @param id    the id
      * @param model the model
-     * @return the string
+     * @return {@link String} page
      */
     @GetMapping("book-update/{id}")
     public String updateBookPage(@PathVariable("id") Long id, Model model) {
@@ -84,7 +84,7 @@ public class BookController {
      * Update book string.
      *
      * @param book the book
-     * @return the string
+     * @return {@link String} page
      */
     @PostMapping("/book-update")
     public String updateBook(Book book) {
