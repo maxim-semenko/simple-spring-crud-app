@@ -45,7 +45,7 @@ public class BookService {
     }
 
     /**
-     * Save.
+     * Save book.
      *
      * @param book the book
      */

@@ -6,17 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * The type Book controller.
  */
 @Controller
+@RequestMapping("/books")
 public class BookController {
 
-    private BookService bookService;
+    private final BookService bookService;
 
     @Autowired
     public BookController(BookService bookService) {
@@ -29,41 +31,27 @@ public class BookController {
      * @param model the model
      * @return the string
      */
-    @GetMapping("/bookList")
+    @GetMapping("/main")
     public String main(Model model) {
         model.addAttribute("books", bookService.findAll());
         return "bookList";
     }
 
-    /**
-     * Add book string.
-     *
-     * @param author the author
-     * @param name   the name
-     * @param pages  the pages
-     * @param model  the model
-     * @return {@link String} page
-     */
-    @PostMapping("/bookList")
-    public String addBook(@RequestParam String author,
-                          @RequestParam String name,
-                          @RequestParam Integer pages,
-                          Model model) {
-        bookService.save(Book.builder().author(author).name(name).pages(pages).build());
-        model.addAttribute("books", bookService.findAll());
-        return "bookList";
+    @GetMapping("/add")
+    private String addBookPage(Model model) {
+        model.addAttribute("book", new Book());
+        return "book-add";
     }
 
     /**
-     * Delete book string.
+     * Add book string.
      *
-     * @param id the id
      * @return {@link String} page
      */
-    @GetMapping("book-delete/{id}")
-    public String deleteBook(@PathVariable("id") Long id) {
-        bookService.deleteById(id);
-        return "redirect:/bookList";
+    @PostMapping("/add")
+    public String addBook(@ModelAttribute Book book) {
+        bookService.save(book);
+        return "redirect:/books/main";
     }
 
     /**
@@ -75,8 +63,7 @@ public class BookController {
      */
     @GetMapping("book-update/{id}")
     public String updateBookPage(@PathVariable("id") Long id, Model model) {
-        Book book = bookService.findById(id);
-        model.addAttribute("book", book);
+        model.addAttribute("book", bookService.findById(id));
         return "/book-update";
     }
 
@@ -89,7 +76,19 @@ public class BookController {
     @PostMapping("/book-update")
     public String updateBook(Book book) {
         bookService.save(book);
-        return "redirect:/bookList";
+        return "redirect:/books/main";
+    }
+
+    /**
+     * Delete book string.
+     *
+     * @param id the id
+     * @return {@link String} page
+     */
+    @GetMapping("book-delete/{id}")
+    public String deleteBook(@PathVariable("id") Long id) {
+        bookService.deleteById(id);
+        return "redirect:/books/main";
     }
 
 }
