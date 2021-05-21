@@ -6,19 +6,34 @@
 </head>
 <body>
 <div>
-    <h1>Add new book</h1>
-    <form th:method="POST" th:action="@{/books/add}" th:object="${book}">
-        <label for="author">Author</label>
-        <input type="text" th:field="*{author}" id="author">
-        <br/>
-        <label for="name">Name</label>
-        <input type="text" th:field="*{name}" id="name">
-        <br/>
-        <label for="pages">Pages</label>
-        <input type="number" th:field="*{pages}" id="pages">
-        <br/>
-        <input type="submit" value="Add book">
-    </form>
+    <div th:replace="components/bootstrap :: bootstrap"></div>
+    <div class="container">
+        <h1 class="text-center">Add new book</h1>
+        <form th:method="POST" th:action="@{/books/add}" th:object="${book}">
+            <div class="form-group">
+                <label for="author">Author</label>
+                <input type="text" class="form-control" th:field="*{author}" id="author">
+                <div style="color:red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Author Error</div>
+            </div>
+            <div class="form-group">
+
+                <label for="name">Name</label>
+                <input type="text" class="form-control" th:field="*{name}" id="name">
+                <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+            </div>
+            <div class="form-group">
+
+                <label for="pages">Pages</label>
+                <input type="number" class="form-control" th:field="*{pages}" id="pages">
+                <div style="color:red" th:if="${#fields.hasErrors('pages')}" th:errors="*{pages}">Pages Error</div>
+            </div>
+
+            <a th:href="@{/books/main}">
+                <button type="button" class="btn btn-primary">Back</button>
+            </a>
+            <input type="submit" class="btn btn-success" value="Add book">
+        </form>
+    </div>
 </div>
 </body>
 </html>

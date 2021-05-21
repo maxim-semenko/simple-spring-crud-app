@@ -5,11 +5,14 @@ import com.example.study.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
 
 /**
  * The type Book controller.
@@ -34,6 +37,7 @@ public class BookController {
     @GetMapping("/main")
     public String main(Model model) {
         model.addAttribute("books", bookService.findAll());
+        model.addAttribute("book", new Book());
         return "bookList";
     }
 
@@ -49,7 +53,10 @@ public class BookController {
      * @return {@link String} page
      */
     @PostMapping("/add")
-    public String addBook(@ModelAttribute Book book) {
+    public String addBook(@Valid @ModelAttribute Book book, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "book-add";
+        }
         bookService.save(book);
         return "redirect:/books/main";
     }
@@ -62,9 +69,9 @@ public class BookController {
      * @return {@link String} page
      */
     @GetMapping("book-update/{id}")
-    public String updateBookPage(@PathVariable("id") Long id, Model model) {
+    public String updateBookPage(@PathVariable Long id, Model model) {
         model.addAttribute("book", bookService.findById(id));
-        return "/book-update";
+        return "book-update";
     }
 
     /**
@@ -73,9 +80,12 @@ public class BookController {
      * @param book the book
      * @return {@link String} page
      */
-    @PostMapping("/book-update")
-    public String updateBook(Book book) {
-        bookService.save(book);
+    @PostMapping("/book-update/{id}")
+    public String updateBook(@Valid @ModelAttribute  Book book, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "book-update";
+        }
+         bookService.save(book);
         return "redirect:/books/main";
     }
 
