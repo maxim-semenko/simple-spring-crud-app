@@ -41,6 +41,11 @@ public class BookController {
         return "bookList";
     }
 
+    /**
+     * Open add bok page
+     * @param model the model
+     * @return {@link String} page
+     */
     @GetMapping("/add")
     private String addBookPage(Model model) {
         model.addAttribute("book", new Book());
